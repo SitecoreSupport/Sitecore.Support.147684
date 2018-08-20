@@ -13,19 +13,34 @@
     [UsedImplicitly]
     public void OnItemAdded(object sender, EventArgs args)
     {
-      var item = Event.ExtractParameter(args, 0) as Item;
-      Assert.IsNotNull(item, nameof(item));
+      Item item = Event.ExtractParameter(args, 0) as Item;
+      Assert.IsNotNull(item, "item");
+      Item[] ItemsArr = item.Axes.GetDescendants();
 
-      if (item.BranchId == ID.Null)
+      if (ItemsArr != null)
       {
-        return;
-      }
-
-      using (new SecurityDisabler())
-      {
-        using (new EditContext(item, false, false))
+        foreach (Item itm in ItemsArr)
         {
-          item.BranchId = ID.Null;
+          if (itm.BranchId != ID.Null)
+          {
+            using (new SecurityDisabler())
+            {
+              using (new EditContext(itm, false, false))
+              {
+                itm.BranchId = ID.Null;
+              }
+            }
+          }
+        }
+      }
+      if (item.BranchId != ID.Null)
+      {
+        using (new SecurityDisabler())
+        {
+          using (new EditContext(item, false, false))
+          {
+            item.BranchId = ID.Null;
+          }
         }
       }
     }
