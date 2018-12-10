@@ -1,7 +1,6 @@
 ﻿namespace Sitecore.Support
 {
   using System;
-
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
@@ -13,19 +12,39 @@
     [UsedImplicitly]
     public void OnItemAdded(object sender, EventArgs args)
     {
-      var item = Event.ExtractParameter(args, 0) as Item;
+      Item item = Event.ExtractParameter(args, 0) as Item;
       Assert.IsNotNull(item, nameof(item));
+      Item[] Descendants = item.Axes.GetDescendants();
 
-      if (item.BranchId == ID.Null)
-      {
-        return;
-      }
+      //Reset item's BranchId
+      item.ResetBranchId();
 
-      using (new SecurityDisabler())
+      //If there are descendants, reset their BranchIds too
+      if (Descendants != null)
       {
-        using (new EditContext(item, false, false))
+        foreach (Item d in Descendants)
         {
-          item.BranchId = ID.Null;
+          d.ResetBranchId();
+        }
+      }      
+    }
+  }
+
+  public static class ItemExtenxions
+  {
+    /// <summary>
+    /// If the item's BranchId is not the Null Id, set it to the Null Id
+    /// </summary>
+    public static void ResetBranchId(this Item item)
+    {
+      if (item.BranchId != ID.Null)
+      {
+        using (new SecurityDisabler())
+        {
+          using (new EditContext(item, false, false))
+          {
+            item.BranchId = ID.Null;
+          }
         }
       }
     }
