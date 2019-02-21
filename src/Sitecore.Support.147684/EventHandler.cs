@@ -15,7 +15,7 @@
     {
       Item item = Event.ExtractParameter(args, 0) as Item;
       Assert.IsNotNull(item, "item");
-      if (item.BranchId == ID.Null)
+      if (item.BranchId == ID.Null) 
       {
         return;
       }
