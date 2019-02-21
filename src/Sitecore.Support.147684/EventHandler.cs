@@ -15,6 +15,11 @@
     {
       Item item = Event.ExtractParameter(args, 0) as Item;
       Assert.IsNotNull(item, "item");
+      if (item.BranchId == ID.Null)
+      {
+        return;
+      }
+
       Item[] ItemsArr = item.Axes.GetDescendants();
 
       if (ItemsArr != null)
@@ -33,14 +38,12 @@
           }
         }
       }
-      if (item.BranchId != ID.Null)
+
+      using (new SecurityDisabler())
       {
-        using (new SecurityDisabler())
+        using (new EditContext(item, false, false))
         {
-          using (new EditContext(item, false, false))
-          {
-            item.BranchId = ID.Null;
-          }
+          item.BranchId = ID.Null;
         }
       }
     }
