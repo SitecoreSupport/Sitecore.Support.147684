@@ -53,7 +53,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventHandler.cs" />
+    <Compile Include="Pipelines\ExpandInitialFieldValue\ReplaceVariables.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
