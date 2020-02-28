@@ -13,13 +13,13 @@ namespace Sitecore.Support.Pipelines.ExpandInitialFieldValue
       Assert.ArgumentNotNull(args, "args");
       MasterVariablesReplacer masterVariablesReplacer = Factory.GetMasterVariablesReplacer();
 
+      string text = args.SourceField.GetValue(true, true, true);
+
       if (args.SourceField.SharedLanguageFallbackEnabled)
       {
         var fieldItem = args.SourceField.GetType().GetField("item", BindingFlags.Instance | BindingFlags.NonPublic);
         fieldItem.SetValue(args.SourceField, args.TargetItem);
       }
-
-      string text = args.SourceField.GetValue(true, true, true);
 
       if (masterVariablesReplacer == null)
       {
